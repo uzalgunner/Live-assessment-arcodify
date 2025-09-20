@@ -22,6 +22,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 interface Category {
@@ -41,7 +42,7 @@ interface Product {
 const ProductPage = () => {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
 
   //pagination
@@ -90,12 +91,7 @@ const ProductPage = () => {
     fetchProducts();
   }, [router]);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<ProductForm>({
+  const { register, handleSubmit, reset } = useForm<ProductForm>({
     defaultValues: {
       title: "",
       price: 0,
@@ -104,12 +100,11 @@ const ProductPage = () => {
 
   //form submission
 
-  const OnSubmit = (data: any) => {
+  const OnSubmit = (data: Record<string, unknown>) => {
     // Manual validation
-    const title = data.title?.trim();
-    const priceStr = data.price;
-    const price =
-      typeof priceStr === "string" ? parseFloat(priceStr) : priceStr;
+    const title = String(data.title || "").trim();
+    const priceStr = String(data.price || "0");
+    const price = parseFloat(priceStr);
 
     if (!title || title.length < 3) {
       alert("Title must be at least 3 characters");
@@ -213,10 +208,12 @@ const ProductPage = () => {
                   <TableCell>${product.price}</TableCell>
                   <TableCell>
                     {product.images[0] && (
-                      <img
+                      <Image
                         src={product.images[0]}
                         alt={product.title}
-                        className="w-12 h-12 object-cover rounded"
+                        width={48}
+                        height={48}
+                        className="object-cover rounded"
                       />
                     )}
                   </TableCell>

@@ -1,7 +1,4 @@
 "use client";
-import Image from "next/image";
-import LoginPage from "./login/page";
-import ProductPage from "./dashboard/page";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
